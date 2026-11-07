@@ -3,6 +3,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { toNodeHandler } from "better-auth/node";
 import globalErrorHandler, { notFoundHandler } from "./utils/globalErrorHandler.js";
+import productRoute from "./modules/product/product.route.js"
 
 const createApp = (auth) => {
     const app = express();
@@ -19,6 +20,8 @@ const createApp = (auth) => {
     app.use(express.json());
 
     app.all("/api/auth/*splat", toNodeHandler(auth));
+
+    app.use("/api/v1/product", productRoute)
 
 
     app.get("/", (req, res) => {
