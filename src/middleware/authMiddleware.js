@@ -38,4 +38,29 @@ export const verifyToken = async (req, res, next) => {
             message: "Session invalid or expired."
         });
     }
-}
+};
+
+export const optionalAuth = async (req, res, next) => {
+    try {
+        const auth = req.app.get("auth");
+        if (!auth) return next();
+
+        const session = await auth.api.getSession({
+            headers: fromNodeHeaders(req.headers),
+        });
+
+        if (session?.user) {
+            req.user = {
+                id: session.user.id,
+                name: session.user.name,
+                email: session.user.email,
+                role: session.user.role,
+                image: session.user.image,
+            };
+        }
+    } catch {
+        // Guest checkout is allowed when no session exists.
+    }
+
+    next();
+};

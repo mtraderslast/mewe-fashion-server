@@ -4,6 +4,8 @@ import cookieParser from "cookie-parser";
 import { toNodeHandler } from "better-auth/node";
 import globalErrorHandler, { notFoundHandler } from "./utils/globalErrorHandler.js";
 import productRoute from "./modules/product/product.route.js"
+import reviewRoute from "./modules/reviews/review.route.js"
+import orderRoute from "./modules/order/order.route.js"
 
 const createApp = (auth) => {
     const app = express();
@@ -22,6 +24,8 @@ const createApp = (auth) => {
     app.all("/api/auth/*splat", toNodeHandler(auth));
 
     app.use("/api/v1/product", productRoute)
+    app.use("/api/v1/reviews", reviewRoute)
+    app.use("/api/v1/orders", orderRoute)
 
 
     app.get("/", (req, res) => {

@@ -73,11 +73,20 @@ export const getProductReviews = catchAsync(async (req, res) => {
         throw new AppError(404, "Product not found");
     }
 
-    const reviews = await Review.find({ productId }).sort({ createdAt: -1 });
+    const reviews = await Review.find({ productId }).select("-userEmail").sort({ createdAt: -1 });
+    const totalReviews = reviews.length;
+    const averageRating = totalReviews
+        ? Math.round((reviews.reduce((sum, review) => sum + review.rating, 0) / totalReviews) * 10) / 10
+        : 0;
+    const breakdown = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+    reviews.forEach((review) => {
+        breakdown[review.rating] = (breakdown[review.rating] || 0) + 1;
+    });
 
     res.status(200).json({
         success: true,
         message: "Product reviews fetched successfully",
+        meta: { averageRating, totalReviews, breakdown },
         data: reviews,
     });
 });
@@ -98,7 +107,7 @@ export const editProductReview = catchAsync(async (req, res) => {
         throw new AppError(404, "Review not found");
     }
 
-    if (review.userId !== userId) {
+    if (String(review.userId) !== String(userId)) {
         throw new AppError(403, "You are not authorized to edit this review");
     }
 
@@ -124,7 +133,7 @@ export const deleteReview = catchAsync(async (req, res) => {
         throw new AppError(404, "Review not found");
     }
 
-    const isOwner = review.userId === userId;
+    const isOwner = String(review.userId) === String(userId);
     const isAdmin = userRole === "admin";
 
     if (!isOwner && !isAdmin) {
@@ -146,7 +155,7 @@ export const getHomeTopReviews = catchAsync(async (req, res) => {
             .select("-userEmail -userId")
             .sort({ rating: -1, createdAt: -1 })
             .limit(8)
-            .populate("productId", "titleBn titleEn slug images"),
+            .populate("productId", "title slug images"),
         Review.aggregate([
             { $group: { _id: null, averageRating: { $avg: "$rating" }, totalReviews: { $sum: 1 } } },
         ]),
