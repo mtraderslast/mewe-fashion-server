@@ -1,11 +1,7 @@
 export const CATEGORY_TREE = {
-    Clothing: ["Burqa", "Abaya", "Hijab", "Niqab", "Hand Socks", "Foot Socks"],
-    Fragrance: ["Perfume", "Body Spray"],
-    Accessories: ["Watch"],
-    "Skin Care": ["Moisturizer", "Sunscreen", "Acne Face Wash", "Gentle Cleanser"],
-    "Hair Care": ["Shampoo"],
-    "Body Care": ["Body Wash", "Body Lotion"],
-    "Baby Care": ["Baby Cream", "Baby Lotion"],
+    Mens: ["Shirt", "Pant", "Shoes", "Watch"],
+    Womens: ["Dress", "Burqa", "Hijab", "Facial Wash", "Moisturizer"],
+    Kids: ["Shirt", "Pant", "Shoes", "Baby Cream"],
 };
 
 export const CATEGORY_VALUES = Object.keys(CATEGORY_TREE);
