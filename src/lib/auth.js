@@ -41,14 +41,20 @@ export const createAuth = (db) => {
                 phone: {
                     type: "string",
                     defaultValue: "",
+                    input: true,
+                    returned: true,
                 },
                 image: {
                     type: "string",
                     defaultValue: "",
+                    input: true,
+                    returned: true,
                 },
                 address: {
                     type: "string",
                     defaultValue: "",
+                    input: true,
+                    returned: true,
                 },
             },
         },
